@@ -1,0 +1,153 @@
+@import "https://at.alicdn.com/t/font_617518_0qrd0ww3jzp.css";
+
+.slider-wrap{
+  position: relative;
+  box-sizing: border-box;
+  width: 500px;
+  height: 300px;
+  z-index: 10000;
+}
+.slider-ul{
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.slider-body{
+  height: 100%;
+}
+.slider-item{
+  position: absolute;
+  width: auto;
+  top: 0;
+  left: 0;
+}
+.is-fade .slider-item{
+  opacity: 0;
+  filter: opacity(0%);
+  -webkit-transition: opacity .2s ease .2s, filter .2s ease .2s;
+  -o-transition: opacity .2s ease .2s, filter .2s ease .2s;
+  -moz-transition: opacity .2s ease .2s, filter .2s ease .2s;
+  transition: opacity .2s ease .2s, filter .2s ease .2s;
+}
+.is-fade .active{
+  opacity: 1;
+  filter: opacity(100%);
+}
+
+.is-slide .slider-item{
+  -webkit-transition: left .4s ease;
+  -o-transition: left .4s ease;
+  -moz-transition: left .4s ease;
+  transition: left .4s ease;
+}
+
+.is-slider .slider-item{
+  -webkit-transition: transform .4s ease, opacity .4s ease, filter .4s ease;
+  -o-transition: transform .4s ease, opacity .4s ease, filter .4s ease;
+  -moz-transition: transform .4s ease, opacity .4s ease, filter .4s ease;
+  transition: transform .4s ease, opacity .4s ease, filter .4s ease;
+}
+
+.slider-link{
+  display: block;
+  text-decoration: none;
+}
+.slider-link > img{
+  display: block;
+}
+.slider-text{
+  padding: 10px 20px;
+  background-color: rgba(0,0,0,0.5);
+  color: #fff;
+  font-size: 13px;
+  position: absolute;
+  width: 100%;
+  box-sizing: border-box;
+  bottom: 0;
+}
+
+/* 切换按钮 */
+.slider-btn-wrap{
+  position: absolute;
+  top: 0;
+  width: 50px;
+  height: 100%;
+  cursor: pointer;
+}
+.slider-prev{
+  left: 0;
+}
+.slider-next{
+  right: 0;
+}
+.slider-btn{
+  width: 20px;
+  height: 40px;
+  line-height: 40px;
+  text-align: center;
+  color: #fff;
+  background-color: rgba(0,0,0,.2);
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+}
+.slider-btn .iconfont{
+  font-size: 12px;
+}
+.slider-btn-left{
+  left: 0;
+}
+.slider-btn-right{
+  right: 0;
+}
+.slider-btn-wrap:hover .slider-btn{
+  background-color: rgba(0,0,0,.5);
+}
+
+/* 指示圆点 */
+.slider-dots{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  bottom: 10px;
+  width: 100%;
+}
+.slider-dot{
+  position: relative;
+  width: 18px;
+  height: 18px;
+  margin-right: 2px;
+  border-radius: 50%;
+  -moz-border-radius: 50%;
+  -webkit-transition: background .2s ease .2s;
+  -o-transition: background .2s ease .2s;
+  -moz-transition: background .2s ease .2s;
+  transition: background .2s ease .2s;
+}
+.slider-dot:after{
+  content: "";
+  display: block;
+  position: absolute;
+  left: 4px;
+  top: 4px;
+  width: 6px;
+  height: 6px;
+  -moz-border-radius: 50%;
+  border-radius: 50%;
+  border: 2px solid #b9beba;
+  -webkit-transition: background .2s ease .2s;
+  -o-transition: background .2s ease .2s;
+  -moz-transition: background .2s ease .2s;
+  transition: background .2s ease .2s;
+}
+.slider-dot:hover,
+.slider-dot.active{
+  background: rgba(255, 255, 255, 0.2);
+}
+.slider-dot:hover:after,
+.slider-dot.active:after{
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  background: #fff;
+}
