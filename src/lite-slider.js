@@ -399,7 +399,7 @@
     },
 
     $remove: function (child) {
-      return this.el.removeChilden(child);
+      return this.el.removeChild(child);
     },
 
     $switchCarousel: function (prevIdx, activeIdx) {

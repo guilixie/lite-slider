@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>demo</title>
+  <link rel="stylesheet" href="./src/lite-slider.css">
+  <style>
+    .left-content,
+    .right-content {
+      float: left;
+      width: 20%;
+      box-sizing: border-box;
+      padding: 20px;
+    }
+
+    .right-content {
+      width: 80%;
+    }
+
+    .list-group-item{
+      display: block;
+      padding: 10px;
+      font-size: 16px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="left-content">
+    <div class="list-group" id="J_leftMenu">
+      <a href="#fade" class="list-group-item">
+        渐变式
+      </a>
+      <a href="#slide" class="list-group-item">
+        滑动式
+      </a>
+      <a href="#carousel" class="list-group-item">
+        旋转式
+      </a>
+    </div>
+  </div>
+
+  <div class="right-content">
+    <div id="app"></div>
+  </div>
+  </div>
+  </div>
+
+  <script src="./src/lite-slider.js"></script>
+  <script>
+    var data = [{
+      img: './img/1.jpg',
+      text: 'img1'
+    }, {
+      img: './img/2.jpg',
+      text: 'img2'
+    }, {
+      img: './img/3.jpg',
+      text: 'img3'
+    }, {
+      img: './img/4.jpg',
+      text: 'img4'
+    }, {
+      img: './img/5.jpg',
+      text: 'img5'
+    }];
+    var config = {
+      el: 'app',
+      setting: {
+        width: 590,
+        height: 470
+      },
+      data: data
+    };
+
+    window.onload = function () {
+      var app = document.querySelector('#app');
+      var liteSlide = Slider(config);;
+
+      liteSlide.render();
+
+      window.onhashchange = function () {
+        var mode = location.hash.replace('#', '');
+        liteSlide.setMode(mode).render();
+      };
+    }; 
+  </script>
+</body>
+
+</html>

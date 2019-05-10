@@ -41,7 +41,7 @@
   transition: left .4s ease;
 }
 
-.is-slider .slider-item{
+.is-carousel .slider-item{
   -webkit-transition: transform .4s ease, opacity .4s ease, filter .4s ease;
   -o-transition: transform .4s ease, opacity .4s ease, filter .4s ease;
   -moz-transition: transform .4s ease, opacity .4s ease, filter .4s ease;
