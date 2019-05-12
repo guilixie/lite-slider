@@ -358,7 +358,7 @@
           .addClass(ul, ['slider-ul','slider-dots']);
         }
         tools.append(ul, li);
-        this.$state.dotList.push(li);
+        this.$state.dotList[i] = li;
       }
       return ul;
     },
@@ -423,14 +423,14 @@
           this.$switchSlideImg(prevIdx, activeIdx);
           break;
         case 'carousel':
-          this.$switchCarouselImg(activeIdx);
+          this.$switchCarouselImg(activeIdx, prevIdx);
           break;
         default:
           break;
       }
     },
 
-    $switchCarouselImg: function (activeIdx) {
+    $switchCarouselImg: function (activeIdx, prevIdx) {
       var deta,leftIdx,rightIdx;
       var len = this.data.length;
       var _this = this;
@@ -467,6 +467,11 @@
       };
       // 设置中间轮播图
       walk(activeIdx,activeStyleObj);
+      // 设置active
+      if (tools.isDef(prevIdx)) {
+        tools.removeClass(this.$state.itemList[prevIdx],'active');
+      }
+      tools.addClass(this.$state.itemList[activeIdx],'active');
       // 设置周围轮播图
       var scale,opacity,zIndex;
       for(var i = 0;i < times;i++){
