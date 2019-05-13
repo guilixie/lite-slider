@@ -12,7 +12,7 @@
       dot: true, // boolean or { wrapStyle: {}, wrapClass: '' }, default true
       btn: true, // boolean or { wrapStyle: {}, wrapClass: '' }, default true
       text: false, // boolean or { wrapStyle: {}, wrapClass: '' }, default false
-      progress: false, // boolean or { wrapStyle: {}, wrapClass: '' }, default false
+      progress: true, // boolean or { wrapStyle: {}, wrapClass: '' }, default false
       extent: 0.1, // carousel mode setting about scale and opacity
       range: 100 // carousel mode setting about translateX
     },
@@ -170,6 +170,7 @@
       prevRef: null,
       nextRef: null,
       dotRef: null,
+      progressRef: null,
       activeIdx: 0,
       itemList: [],
       dotList: [],
@@ -203,6 +204,27 @@
       return setting;
     },
 
+    $setWrapStyle: function (wrapStyle, styleObj) {
+      if(tools.isPlainObject(wrapStyle)){
+        for(var attr in wrapStyle){
+          styleObj[attr] = wrapStyle[attr];
+        }
+      }
+      return styleObj;
+    },
+
+    $setWrapClass: function (wrapClass, clsArr) {
+      if (wrapClass) {
+        // 支持数组和字符串
+        if (tools.isArray(wrapClass)) {
+          clsArr = clsArr.concat(wrapClass);
+        } else {
+          clsArr.push(wrapClass);
+        }
+      }
+      return clsArr;
+    },
+
     $renderItem: function (ul, i, isActive, fakeIdx) {
       var li = tools.createEl('li');
       var a = tools.createEl('a');
@@ -229,12 +251,8 @@
       };
       if(item.text && this.setting.text){
         if(tools.isPlainObject(this.setting.text)){
-          if(tools.isPlainObject(this.setting.text.wrapStyle)){
-            for(var attr in this.setting.text.wrapStyle){
-              styleObj[attr] = this.setting.text.wrapStyle[attr];
-            }
-          }
-          this.setting.text.wrapClass && clsArr.push(this.setting.text.wrapClass);
+          styleObj = this.$setWrapStyle(this.setting.text.wrapStyle, styleObj);
+          clsArr = this.$setWrapClass(this.setting.text.wrapClass, clsArr);
         }
         textWrap = tools.createEl('div');
         text = document.createTextNode(item.text);
@@ -315,12 +333,8 @@
         zIndex: this.setting.zIndex*10
       };
       if(tools.isPlainObject(this.setting.btn)){
-        if(tools.isPlainObject(this.setting.btn.wrapStyle)){
-          for(var attr in this.setting.btn.wrapStyle){
-            styleObj[attr] = this.setting.btn.wrapStyle[attr];
-          }
-        }
-        this.setting.btn.wrapClass && clsArr.push(this.setting.btn.wrapClass);
+        styleObj = this.$setWrapStyle(this.setting.btn.wrapStyle, styleObj);
+        clsArr = this.$setWrapClass(this.setting.btn.wrapClass, clsArr);
       }
       tools.addClass(wrap, clsArr)
       .addClass(btn, ['slider-btn',btnClsMap[which]])
@@ -340,12 +354,8 @@
         zIndex: this.setting.zIndex*10
       };
       if(tools.isPlainObject(this.setting.dot)){
-        if(tools.isPlainObject(this.setting.dot.wrapStyle)){
-          for(var attr in this.setting.dot.wrapStyle){
-            styleObj[attr] = this.setting.dot.wrapStyle[attr];
-          }
-        }
-        this.setting.dot.wrapClass && clsArr.push(this.setting.dot.wrapClass);
+        styleObj = this.$setWrapStyle(this.setting.dot.wrapStyle, styleObj);
+        clsArr = this.$setWrapClass(this.setting.dot.wrapClass, clsArr);
       }
       tools.addClass(ul, clsArr)
       .css(ul, styleObj);
@@ -363,6 +373,30 @@
       return ul;
     },
 
+    $renderProgress: function () {
+      var wrap = tools.createEl('div');
+      var inner = tools.createEl('div');
+      var clsArr = ['slider-progress-bar'];
+      var innerClsArr = ['slider-progress-inner']
+      var innerStyleObj = {
+        width: '0%'
+      };
+      var styleObj = {
+        height: '6px',
+        zIndex: this.setting.zIndex * 10
+      };
+      if(tools.isPlainObject(this.setting.progress)){
+        styleObj = this.$setWrapStyle(this.setting.progress.wrapStyle, styleObj);
+        clsArr = this.$setWrapClass(this.setting.progress.wrapClass, clsArr);
+      }
+      tools.addClass(wrap, clsArr)
+      .css(wrap, styleObj)
+      .addClass(inner, innerClsArr)
+      .css(inner, innerStyleObj)
+      .append(wrap, inner);
+      return wrap;
+    },
+
     $render: function () {
       this.$valid();
       var fragment = document.createDocumentFragment();
@@ -372,20 +406,15 @@
       if(this.setting.btn){
         this.$state.prevRef = this.$renderPrevBtn();
         this.$state.nextRef = this.$renderNextBtn();
-        domArr = [
-          this.$state.bodyRef, 
-          this.$state.prevRef, 
-          this.$state.nextRef
-        ];
+        domArr = domArr.concat([this.$state.prevRef, this.$state.nextRef]);
       }
       if(this.setting.dot){
         this.$state.dotRef = this.$renderDots();
-        domArr = [
-          this.$state.bodyRef,
-          this.$state.prevRef,
-          this.$state.nextRef,
-          this.$state.dotRef
-        ];
+        domArr = domArr.concat([this.$state.dotRef]);
+      }
+      if (this.setting.auto && this.setting.progress) {
+        this.$state.progressRef = this.$renderProgress();
+        domArr = domArr.concat([this.$state.progressRef]);
       }
       tools.append(this.$state.wrapRef, domArr)
       .append(fragment, this.$state.wrapRef)
@@ -562,7 +591,7 @@
         .addClass(active,'active');
       }
     },
-    
+
     $changeActiveIdx: function (type) {
       var len = this.data.length;
       if(type === 'next') {
@@ -639,6 +668,32 @@
       this.$state.autoTimer.id && window.clearInterval(this.$state.autoTimer.id);
       this.$state.autoTimer.id = null;
     },
+
+    $resetProgress: function (fn) {
+      this.$progressStop();
+      typeof fn === 'function' && fn.call(this);
+      tools.delay(this.$progressGo.bind(this), 0);
+    },
+
+    $progressGo: function () {
+      var inner = this.$state.progressRef.childNodes[0];
+      tools.css(inner, {
+        animation: 'progress-gogogo ' + this.$state.autoTimer.sec + 's infinite',
+        webkitAnimation: 'progress-gogogo ' + this.$state.autoTimer.sec + 's infinite'/* Safari 和 Chrome */
+      });
+      return this;
+    },
+
+    $progressStop: function () {
+      var inner = this.$state.progressRef.childNodes[0];
+      tools.css(inner, {
+        width: 0,
+        animation: 'none',
+        webkitAnimation: 'none'
+      });
+      return this;
+    },
+
     /* 提供使用的 API */
     // 设置轮播效果
     setMode: function(mode){
