@@ -45,6 +45,7 @@
 
   <div class="right-content">
     <div id="app"></div>
+    <div id="app1"></div>
   </div>
   </div>
   </div>
@@ -67,6 +68,7 @@
       img: './img/5.jpg',
       text: 'img5'
     }];
+
     var config = {
       el: 'app',
       setting: {
@@ -76,11 +78,21 @@
       data: data
     };
 
+    var config1 = {
+      el: 'app1',
+      setting: {
+        width: 590,
+        height: 470
+      },
+      data: data
+    };
+
     window.onload = function () {
-      var app = document.querySelector('#app');
-      var liteSlide = Slider(config);;
+      var liteSlide = Slider(config);
+      var liteSlide1 = Slider(config1);
 
       liteSlide.render();
+      liteSlide1.render();
 
       window.onhashchange = function () {
         var mode = location.hash.replace('#', '');
