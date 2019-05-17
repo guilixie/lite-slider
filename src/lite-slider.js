@@ -196,26 +196,30 @@
     this.mode = opt.mode || defOption.mode
     this.setting = this.$genSetting(opt.setting)
     this.data = opt.data || defOption.data
-    this.$state = {
-      wrapRef: null,
-      bodyRef: null,
-      prevRef: null,
-      nextRef: null,
-      dotRef: null,
-      progressRef: null,
-      activeIdx: 0,
-      itemList: [],
-      dotList: [],
-      autoTimer: {
-        id: null,
-        rid: null,
-        isfire: false,
-        sec: 5
-      }
-    }
+    this.$initState()
   }
 
   Slider.prototype = {
+    $initState: function() {
+      this.$state = {
+        wrapRef: null,
+        bodyRef: null,
+        prevRef: null,
+        nextRef: null,
+        dotRef: null,
+        progressRef: null,
+        activeIdx: 0,
+        itemList: [],
+        dotList: [],
+        autoTimer: {
+          id: null,
+          rid: null,
+          isfire: false,
+          sec: 5
+        }
+      }
+    },
+
     $valid: function(data) {
       data = data || this.data
       var len = data.length
@@ -228,7 +232,6 @@
     },
 
     $genSetting: function(setting) {
-      console.log(this)
       if (!tools.isDef(setting)) return defOption.setting
       for (var prop in defOption.setting) {
         if (!tools.isDef(setting[prop])) {
