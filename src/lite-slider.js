@@ -197,6 +197,7 @@
     this.setting = this.$genSetting(opt.setting)
     this.data = opt.data || defOption.data
     this.$initState()
+    this.$createApi()
   }
 
   Slider.prototype = {
@@ -217,6 +218,62 @@
           isfire: false,
           sec: 5
         }
+      }
+    },
+
+    $createApi: function() {
+      // 设置轮播效果
+      this.setMode = function(mode) {
+        console.log(this)
+        this.mode = mode
+        return this
+      }
+      // 设置配置项
+      this.setOption = function(option) {
+        this.setting = this.$genSetting(option)
+        return this
+      }
+      // 设置数据
+      this.setData = function(data) {
+        this.$valid(data)
+        this.data = data
+        return this
+      }
+      // 添加图
+      this.addItem = function(obj) {
+        var data = this.data.concat([obj])
+        this.$valid(data)
+        this.data = data
+        return this
+      }
+      // 移除图
+      this.removeItem = function(index) {
+        var data = this.data.slice(0, index).concat(this.data.slice(index + 1))
+        this.$valid(data)
+        this.data = data
+        return this
+      }
+      // 渲染
+      this.render = function() {
+        this.$clear()
+        this.$render()
+      }
+      // 清空容器
+      this.clear = function() {
+        return this.$clear()
+      }
+      // 开启自动轮播
+      this.start = function() {
+        this.$refreshAutoRun()
+      }
+      // 暂停自动轮播
+      this.pause = function() {
+        this.$stopAutoRun()
+      }
+      // 设置最初展示的图片
+      this.active = function(index) {
+        this.$state.activeIdx = index
+        return this
       }
     },
 
@@ -796,60 +853,6 @@
 
     $progressStop: function() {
       window.cancelAnimationFrame(this.$state.autoTimer.rid)
-    },
-
-    /* 提供使用的 API */
-    // 设置轮播效果
-    setMode: function(mode) {
-      this.mode = mode
-      return this
-    },
-    // 设置配置项
-    setOption: function(option) {
-      this.setting = this.$genSetting(option)
-      return this
-    },
-    // 设置数据
-    setData: function(data) {
-      this.$valid(data)
-      this.data = data
-      return this
-    },
-    // 添加图
-    addItem: function(obj) {
-      var data = this.data.concat([obj])
-      this.$valid(data)
-      this.data = data
-      return this
-    },
-    // 移除图
-    removeItem: function(index) {
-      var data = this.data.slice(0, index).concat(this.data.slice(index + 1))
-      this.$valid(data)
-      this.data = data
-      return this
-    },
-    // 渲染
-    render: function() {
-      this.$clear()
-      this.$render()
-    },
-    // 清空容器
-    clear: function() {
-      return this.$clear()
-    },
-    // 开启自动轮播
-    start: function() {
-      this.$refreshAutoRun()
-    },
-    // 暂停自动轮播
-    pause: function() {
-      this.$stopAutoRun()
-    },
-    // 设置最初展示的图片
-    active: function(index) {
-      this.$state.activeIdx = index
-      return this
     }
   }
 
